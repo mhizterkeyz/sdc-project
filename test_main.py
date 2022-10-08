@@ -41,8 +41,14 @@ def test_auth(client):
     assert token is not None
 
 def test_content(client):
+    body = {'email': EMAIL,
+            'password': PASSWORD}
+    response = client.post('/auth', 
+                           data=json.dumps(body),
+                           content_type='application/json')
+    token = response.json['token']
     response = client.get('/contents',
-                           headers={'Authorization': f'Bearer {TOKEN}'},)
+                           headers={'Authorization': f'Bearer {token}'},)
 
     assert response.status_code == 200
     email = response.json['email']
@@ -51,4 +57,3 @@ def test_content(client):
     assert email is not None
     assert exp is not None
     assert nbf is not None
-    assert False
